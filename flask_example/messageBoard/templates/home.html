@@ -1,1 +1,18 @@
-<h1> Hello world</h1>
+{% extends "template.html" %}
+
+{% block content %}
+    <h1 class="text-center"> Message Board </h1>
+   
+    <div class="container">
+        <div class="row row-cols-3">
+            {% for msg in messages %}
+                <div class="card my-1">
+                    <div class="card-body">
+                        <h5 class="card-title">{{msg.title}}</h5>
+                        <p class="card-text">{{msg.message}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
