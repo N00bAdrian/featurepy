@@ -2,6 +2,10 @@ from flask.views import MethodView
 from flask import Blueprint, render_template
 from wtforms import Form, StringField, TextAreaField
 from wtforms.validators import DataRequired
+from sqlalchemy import select
+
+from ..db import db
+from ..models.message import Message
 
 bp = Blueprint("home", __name__, template_folder="../templates")
 
@@ -13,24 +17,8 @@ class HomeView(MethodView):
 
     def get(self):
         form = MessageForm()
-        messages = [
-            {
-                "title": "Title 1",
-                "message": "This is a message"
-            },
-            {
-                "title": "Title 2",
-                "message": "This is also a message"
-            },
-            {
-                "title": "Title 3",
-                "message": "This is also a message"
-            },
-            {
-                "title": "Title 4",
-                "message": "This is also a message"
-            },
-        ]
+
+        messages = db.session.execute(select(Message)).scalars().all()
 
         return render_template("home.html", form=form, messages=messages)
 
