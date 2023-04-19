@@ -1,8 +1,10 @@
 from flask.views import MethodView
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, request, redirect
 from wtforms import Form, StringField, TextAreaField
 from wtforms.validators import DataRequired
 from sqlalchemy import select
+
+import flask
 
 from ..db import db
 from ..models.message import Message
@@ -17,16 +19,14 @@ class HomeView(MethodView):
 
     def get(self):
         form = MessageForm(request.form)
-
         messages = db.session.execute(select(Message)).scalars().all()
-
-        return render_template("home.html", form=form, messages=messages)
+        return flask.render_template("home.html", form=form, messages=messages)
 
     def post(self):
         form = MessageForm(request.form)
         if form.validate():
             print("Form validated")
-            db.session.add(Message(title=form.title.data, message=form.message.data))
+            db.session.add(Message(**form.data))
             db.session.commit()
         
         return redirect("/")

@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+
+{% block content %}
+    <h1 class="text-center"> Message Board </h1>
+    <div class="container">
+        <form method="POST">
+            {% for field in form %}
+                {{ field.label(class_="form-label") }}
+                {{ field(class_="form-control") }}
+            {% endfor %}
+            <input type="submit" class="btn btn-primary"/>
+        </form>
+    </div>
+   
+    <div class="container">
+        <div class="row row-cols-3">
+            {% for msg in messages %}
+                <div class="card my-1">
+                    <div class="card-body">
+                        <h5 class="card-title">{{msg.title}}</h5>
+                        <h6 class="card-subtitle text-body-secondary">{{msg.author}}</h6>
+                        <p class="card-text">{{msg.message}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
