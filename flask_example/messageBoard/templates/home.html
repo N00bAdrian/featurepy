@@ -4,10 +4,14 @@
     <h1 class="text-center"> Message Board </h1>
     <div class="container">
         <form method="POST">
-            {% for field in form %}
-                {{ field.label(class_="form-label") }}
-                {{ field(class_="form-control") }}
-            {% endfor %}
+            <div id="title" class="mb-3">
+                {{ form.title.label(class_="form-label") }}
+                {{ form.title(class_="form-control") }}
+            </div>
+            <div id="message" class="mb-3">
+                {{ form.message.label(class_="form-label") }}
+                {{ form.message(class_="form-control") }}
+            </div>
             <input type="submit" class="btn btn-primary"/>
         </form>
     </div>
