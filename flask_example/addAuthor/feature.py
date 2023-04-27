@@ -3,7 +3,6 @@ from flask import render_template_string
 from aspectlib import Aspect, weave, Proceed, Return
 from wtforms import StringField
 from bs4 import BeautifulSoup
-import os
 
 from messageBoard.db import db
 
@@ -13,18 +12,21 @@ def addAuthorCard(filename, **kwargs):
         soup = BeautifulSoup(fp, 'html.parser')
 
         form = soup.find("form")
-        author_form = soup.new_tag("div", id="author", class_="mb-3")
+        author_form = soup.new_tag("div", attrs={
+            "id": "author", 
+            "class": "mb-3"
+        })
         author_form.string = """{{form.author.label(class_="form-label")}}{{form.author(class_="form-control")}}"""
         form.find(id="title").insert_after(author_form)
 
         card = soup.find("div", class_="card-body")
-        author_card = soup.new_tag("h6", class_="card-subtitle text-body-secondary")
+        author_card = soup.new_tag("h6", attrs={
+            "class": "card-subtitle text-body-secondary"
+        })
         author_card.string = "{{msg.author}}"
         card.h5.insert_after(author_card)
         
         yield Return(render_template_string(soup.prettify(), **kwargs))
-
-    # yield Proceed("home_with_author.html", **kwargs)
 
 @Aspect
 def defaultAnon(self, res, **kwargs):
@@ -55,7 +57,7 @@ class AuthorTemplate:
 
 def select(composer):
     from messageBoard.models.message import Message
-    from messageBoard.views.home import MessageForm, HomeView
+    from messageBoard.routes.home import MessageForm, HomeView
 
     composer.compose(AuthorFormField(), MessageForm)
     composer.compose(AuthorModelField(), Message)

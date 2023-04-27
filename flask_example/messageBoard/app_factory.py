@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap5
 
-from .views import home
+from .routes import home
 from .db import db
 from .models.message import Message
 from .factories.messageFactory import MessageFactory

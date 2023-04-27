@@ -19,7 +19,7 @@
     <div class="container">
         <div class="row row-cols-3">
             {% for msg in messages %}
-                <div class="card my-1">
+                <div id="{{msg.id}}" class="card my-1">
                     <div class="card-body">
                         <h5 class="card-title">{{msg.title}}</h5>
                         <p class="card-text">{{msg.message}}</p>

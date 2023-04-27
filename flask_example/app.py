@@ -1,5 +1,6 @@
-from messageBoard import create_app
+# from messageBoard import create_app
+import messageBoard
 from featuremonkey import select_equation
 
 select_equation('config.equation')
-app = create_app()
+app = messageBoard.create_app()
