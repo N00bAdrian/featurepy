@@ -33,20 +33,20 @@ class DeleteTemplate:
             
         return get
     
-# class DeleteRoute:
-#     def refine_create_app(self, original):
-#         def create_app():
-#             app = original()
-#             app.register_blueprint(delete.bp)
-#             return app
+class DeleteRoute:
+    def refine_create_app(self, original):
+        def create_app():
+            app = original()
+            app.register_blueprint(delete.bp)
+            return app
         
-#         return create_app
+        return create_app
 
 def select(composer):
+    # composer.compose_later(DeleteRoute(), 'messageBoard.app_factory')
     from messageBoard.routes.home import HomeView
-    # from messageBoard import create_app
+    import messageBoard
 
     composer.compose(DeleteTemplate(), HomeView)
-    # composer.compose(DeleteRoute(), messageBoard.app_factory) 
-    # weave(create_app, addDeleteRoute)
-    weave('messageBoard.create_app', addDeleteRoute)
+    composer.compose(DeleteRoute(), messageBoard)
+    # weave('messageBoard.create_app', addDeleteRoute)
