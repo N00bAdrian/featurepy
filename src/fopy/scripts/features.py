@@ -14,8 +14,8 @@ def newfeature(args=None):
         Path(f"{name}/feature.py").write_text(
             """from fopy import Composer
 
-            def select(composer):
-                pass
+def select(composer):
+    pass
             """
         )
     else:
