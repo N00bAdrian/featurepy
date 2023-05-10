@@ -15,14 +15,27 @@ class Edge:
         self.a = a
         self.b = b
     
+    def __repr__(self):
+        return f"{str(self.a)}-{str(self.b)}"
+    
     def __str__(self):
         return f"{str(self.a)}-{str(self.b)}"
 
 class Graph:
     edges = []
+    nodes = []
 
     def add(self, a:Node, b:Node):
+        if a not in self.nodes:
+            self.nodes.append(a)
+
+        if b not in self.nodes:
+            self.nodes.append(b)
+
         self.edges.append(Edge(a, b))
     
+    def __repr__(self):
+        return ",".join([str(edge) for edge in self.edges])
+
     def __str__(self):
         return ",".join([str(edge) for edge in self.edges])

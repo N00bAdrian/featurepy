@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "fopy"
+version = "0.1.0"
+description = ""
+authors = ["Adrian Wong <adrianwong227@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+featuremonkey = {git = "https://github.com/N00bAdrian/featuremonkey.git"}
+aspectlib = {git = "https://github.com/N00bAdrian/python-aspectlib.git"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
