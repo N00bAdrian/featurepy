@@ -1,6 +1,8 @@
 from pathlib import Path
 
-def newfeature(name):
+def newfeature(args):
+    name = args[0]
+
     if not Path(f"{name}/").exists():
         Path(f"{name}/").mkdir()
         Path(f"{name}/__pycache__/").mkdir()
