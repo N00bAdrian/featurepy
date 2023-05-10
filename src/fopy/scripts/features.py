@@ -1,6 +1,10 @@
 from pathlib import Path
+import sys
 
-def newfeature(args):
+def newfeature(args=None):
+    if not args:
+        args = sys.argv[1:]
+
     name = args[0]
 
     if not Path(f"{name}/").exists():
