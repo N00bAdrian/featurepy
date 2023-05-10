@@ -11,7 +11,7 @@ featuremonkey = {git = "https://github.com/N00bAdrian/featuremonkey.git"}
 aspectlib = {git = "https://github.com/N00bAdrian/python-aspectlib.git"}
 
 [tool.poetry.scripts]
-newfeature = "scripts.features:newfeature"
+newfeature = "fopy.scripts.features:newfeature"
 
 [build-system]
 requires = ["poetry-core"]
