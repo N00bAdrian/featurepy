@@ -1,5 +1,5 @@
 # from messageBoard import create_app
-from featuremonkey import select_equation
+from fopy import select_equation
 
 select_equation('config.equation')
 

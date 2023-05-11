@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-featuremonkey = {git = "https://github.com/N00bAdrian/featuremonkey.git"}
 aspectlib = {git = "https://github.com/N00bAdrian/python-aspectlib.git"}
 
 [tool.poetry.scripts]
