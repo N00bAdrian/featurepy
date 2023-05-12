@@ -1,6 +1,8 @@
 from aspectlib import Aspect, weave, Proceed, Return
 from bs4 import BeautifulSoup
-from flask import render_template_string
+from flask import render_template
+from tempfile import NamedTemporaryFile
+from os import path
 
 from .routes import delete
 
@@ -16,7 +18,10 @@ def addDeleteButton(filename, **kwargs):
         del_button.string = "Delete"
         card.append(del_button)
 
-        yield Return(render_template_string(soup.prettify(), **kwargs))
+        with NamedTemporaryFile(suffix=".html", dir="messageBoard/templates") as tfp:
+            tfp.write(str.encode(soup.prettify()))
+            tfp.seek(0)
+            yield Return(render_template(path.basename(tfp.name), **kwargs))
 
 @Aspect
 def addDeleteRoute():

@@ -1,8 +1,9 @@
-from featuremonkey import compose
-from flask import render_template_string
+from flask import render_template
 from aspectlib import Aspect, weave, Proceed, Return
 from wtforms import StringField
 from bs4 import BeautifulSoup
+from tempfile import NamedTemporaryFile
+from os import path
 
 from messageBoard.db import db
 
@@ -26,7 +27,10 @@ def addAuthorCard(filename, **kwargs):
         author_card.string = "{{msg.author}}"
         card.h5.insert_after(author_card)
         
-        yield Return(render_template_string(soup.prettify(), **kwargs))
+        with NamedTemporaryFile(suffix=".html", dir="messageBoard/templates") as tfp:
+            tfp.write(str.encode(soup.prettify()))
+            tfp.seek(0)
+            yield Return(render_template(path.basename(tfp.name), **kwargs))
 
 @Aspect
 def defaultAnon(self, res, **kwargs):

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fopy"
+name = "featurepy"
 version = "0.1.0"
 description = ""
 authors = ["Adrian Wong <adrianwong227@gmail.com>"]
