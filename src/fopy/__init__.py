@@ -1,2 +1,2 @@
-from featuremonkey import Composer, select, select_equation
+from featuremonkey import Composer, select,
 from aspectlib import Aspect, weave, Proceed, Return
