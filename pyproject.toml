@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "featurepy"
-version = "0.1.0"
+version = "0.1.0+hotfix"
 description = ""
 authors = ["Adrian Wong <adrianwong227@gmail.com>"]
 readme = "README.md"
@@ -11,7 +11,7 @@ featuremonkey3 = "^0.1.1"
 aspectlib = "^2.0.0"
 
 [tool.poetry.scripts]
-newfeature = "fopy.scripts.features:newfeature"
+newfeature = "featurepy.scripts.features:newfeature"
 
 [tool.poetry.group.example.dependencies]
 flask = "^2.3.2"

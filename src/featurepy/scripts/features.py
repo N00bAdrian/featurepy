@@ -12,7 +12,7 @@ def newfeature(args=None):
         Path(f"{name}/__pycache__/").mkdir()
         Path(f"{name}/__init__.py").touch()
         Path(f"{name}/feature.py").write_text(
-            """from fopy import Composer
+            """from featurepy import Composer
 
 def select(composer):
     pass
