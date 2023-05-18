@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "featurepy"
-version = "0.1.0+hotfix"
-description = ""
+version = "0.1.1"
+description = "Framework for building software product lines using feature-oriented programming (FOP) and aspect-oriented programming (AOP) in Python."
 authors = ["Adrian Wong <adrianwong227@gmail.com>"]
 readme = "README.md"
 
