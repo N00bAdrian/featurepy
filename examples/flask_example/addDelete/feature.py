@@ -1,42 +1,35 @@
-from aspectlib import Aspect, weave, Proceed, Return
 from bs4 import BeautifulSoup
-from flask import render_template
 from tempfile import NamedTemporaryFile
 from os import path
 
 from .routes import delete
 
-@Aspect
-def addDeleteButton(filename, **kwargs):
-    with open(f'messageBoard/templates/{filename}') as fp:
-        soup = BeautifulSoup(fp, 'html.parser')
-        card = soup.find("div", class_="card-body")
-        del_button = soup.new_tag("a", attrs={
-            "class": "btn btn-danger",
-            "href": "/delete/{{msg.id}}"
-        })
-        del_button.string = "Delete"
-        card.append(del_button)
+def add_delete_button(soup):
+    card = soup.find("div", class_="card-body")
+    del_button = soup.new_tag("a", attrs={
+        "class": "btn btn-danger",
+        "href": "/delete/{{msg.id}}"
+    })
+    del_button.string = "Delete"
+    card.append(del_button)
 
-        with NamedTemporaryFile(suffix=".html", dir="messageBoard/templates") as tfp:
-            tfp.write(str.encode(soup.prettify()))
-            tfp.seek(0)
-            yield Return(render_template(path.basename(tfp.name), **kwargs))
-
-@Aspect
-def addDeleteRoute():
-    app = yield Proceed
-    app.register_blueprint(delete.bp)
-
-    yield Return(app)
+    return soup
 
 class DeleteTemplate:
-    def refine_get(self, original):
-        def get(cls):
-            with weave("flask.render_template", addDeleteButton):
-                return original(cls)
-            
-        return get
+
+    def refine_render(self, original):
+        @staticmethod
+        def render(filename, **kwargs):
+            with open(f"messageBoard/templates/{filename}") as fp:
+                soup = BeautifulSoup(fp, 'html.parser')
+                soup = add_delete_button(soup)
+
+                with NamedTemporaryFile(suffix=".html", dir="messageBoard/templates") as tfp:
+                    tfp.write(str.encode(soup.prettify()))
+                    tfp.seek(0)
+                    return original(path.basename(tfp.name), **kwargs)
+                
+        return render
     
 class DeleteRoute:
     def refine_create_app(self, original):
@@ -48,10 +41,8 @@ class DeleteRoute:
         return create_app
 
 def select(composer):
-    # composer.compose_later(DeleteRoute(), 'messageBoard.app_factory')
     from messageBoard.routes.home import HomeView
     import messageBoard
 
     composer.compose(DeleteTemplate(), HomeView)
     composer.compose(DeleteRoute(), messageBoard)
-    # weave('messageBoard.create_app', addDeleteRoute)
