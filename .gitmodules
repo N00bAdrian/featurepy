@@ -1,0 +1,6 @@
+# [submodule "src/featuremonkey3"]
+# 	path = src/featuremonkey3
+# 	url = https://github.com/N00bAdrian/featuremonkey3.git
+# [submodule "src/python-aspectlib"]
+# 	path = src/python-aspectlib
+# 	url = https://github.com/N00bAdrian/python-aspectlib.git

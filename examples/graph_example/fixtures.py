@@ -46,7 +46,7 @@ class TestGraph:
 
     def test_nodes_from(self, new_graph):
         new_graph.add("a", "b")
-        new_graph.add("a", "c")
+        new_graph.add("c", "a")
         new_graph.add("a", "a")
 
         assert all([len(new_graph.nodes_from(node.val))
