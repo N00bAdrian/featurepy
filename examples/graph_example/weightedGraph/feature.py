@@ -1,29 +1,47 @@
-from featuremonkey import Composer
+from featurepy import Composer, Aspect, weave, Proceed
 from basicGraph import Edge
+
 
 class WeightedEdgeRefinement:
     def refine___init__(self, original):
-        def __init__(cls, *args, weight=1, **kwargs):
-            original(cls, *args, **kwargs)
-            cls.weight = weight
+        def __init__(slf, *args, weight=1, **kwargs):
+            original(slf, *args, **kwargs)
+            slf.weight = weight
 
         return __init__
 
-    def refine___str__(self, original):
-        def __str__(cls):
-            return f"({original(cls)}, w={cls.weight})"
-        
-        return __str__
+
+def add_weight_aspect(weight):
+    @Aspect
+    def add_weight(*args, **kwargs):
+        kwargs['weight'] = weight
+        yield Proceed(*args, **kwargs)
+
+    return add_weight
+
 
 class WeightedGraphRefinement:
     def refine_add(self, original):
-        def add(cls, *args, weight=1, **kwargs):
-            cls.edges.append(Edge(*args, weight=weight, **kwargs))
+        def add(slf, *args, weight=1, **kwargs):
+            with weave(Edge, add_weight_aspect(weight), methods='__init__'):
+                original(slf, *args, **kwargs)
 
-        return add 
+        return add
 
 
-def select(composer:Composer):
+class TestEdgeRefinement:
+    def introduce_test_weights(self):
+        def test_weights(slf):
+            assert Edge("a", "b").weight == 1
+            assert Edge("a", "b", weight=2).weight == 2
+
+        return test_weights
+
+
+def select(composer: Composer):
     from basicGraph import Edge, Graph
+    from fixtures import TestEdge
+
     composer.compose(WeightedEdgeRefinement(), Edge)
     composer.compose(WeightedGraphRefinement(), Graph)
+    composer.compose(TestEdgeRefinement(), TestEdge)
