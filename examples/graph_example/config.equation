@@ -1,5 +1,6 @@
+cycleDetection
 breadthFirstSearch
-#directedGraph
+directedGraph
 weightedGraph
 simpleGraph
 basicGraph
