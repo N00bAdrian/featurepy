@@ -35,10 +35,8 @@ def get_features(fm):
 
     return features
 
-# Not complete
 
-
-def parse_reqs(reqs, selections):
+def parse_reqs(reqs, selections):  # Not complete
     return reqs in selections
 
 
