@@ -1,0 +1,18 @@
+name: basicGraph
+children:
+- name: directedGraph
+  optional: True
+
+- name: simpleGraph
+  optional: True
+
+- name: weightedGraph
+  optional: True
+
+- name: Algorithms
+  optional: True
+  branch: or
+  children:
+  - name: cycleDetection
+    cross-tree-reqs: directedGraph
+  - name: breadthFirstSearch
