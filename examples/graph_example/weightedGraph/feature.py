@@ -40,7 +40,7 @@ class TestEdgeRefinement:
 
 def select(composer: Composer):
     from basicGraph import Edge, Graph
-    from fixtures import TestEdge
+    from basicGraph.test_graph import TestEdge
 
     composer.compose(WeightedEdgeRefinement(), Edge)
     composer.compose(WeightedGraphRefinement(), Graph)

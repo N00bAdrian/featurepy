@@ -45,7 +45,7 @@ def validate_selections(fm, selections, remaining_selections):
         raise FeatureSelectionError(
             f"Mandatory feature not selected: {fm['name']}")
 
-    if 'cross-tree-reqs' in fm and not parse_reqs(fm['cross-tree-reqs'], selections):
+    if 'cross-tree-reqs' in fm and fm['name'] in selections and not parse_reqs(fm['cross-tree-reqs'], selections):
         raise FeatureSelectionError(
             f"Cross-tree requirements not satisfied for {fm['name']}")
 
@@ -73,12 +73,13 @@ def model_constraints(composer, *features):
         feature_model = safe_load(fp)
 
     all_features = get_features(feature_model)
+    selections = [feature.split("(")[0] for feature in features]
 
-    if not set(features).issubset(set(all_features)):
+    if not set(selections).issubset(set(all_features)):
         raise FeatureSelectionError("Undefined features selected.")
 
     unvalidated_selections = validate_selections(
-        feature_model, list(features), list(features))
+        feature_model, list(selections), list(selections))
 
     if unvalidated_selections != []:
         raise FeatureSelectionError(

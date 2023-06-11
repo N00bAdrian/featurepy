@@ -7,14 +7,14 @@ class RepeatedEdgeError(Exception):
     pass
 
 
-# class SimpleEdgeRefinement:
-#     def refine___eq__(self, original):
-#         def __eq__(cls, other):
-#             if isinstance(other, Edge):
-#                 return (cls.a == other.a and cls.b == other.b) or (cls.a == other.b and cls.b == other.a)
-#             return False
+class SimpleEdgeRefinement:
+    def refine___eq__(self, original):
+        def __eq__(cls, other):
+            if isinstance(other, Edge):
+                return (cls.a == other.a and cls.b == other.b) or (cls.a == other.b and cls.b == other.a)
+            return False
 
-#         return __eq__
+        return __eq__
 
 
 class SimpleGraphRefinement:
@@ -29,17 +29,19 @@ class SimpleGraphRefinement:
 
 class TestRefinement:
     def refine_test_cycle(self, original):
-        def test_cycle(slf, new_graph):
+        def test_cycle(slf, graph):
+            print("hi")
             with pytest.raises(RepeatedEdgeError):
-                new_graph.add("a", "b")
-                new_graph.add("b", "a")
+                graph.add("a", "b")
+                graph.add("b", "a")
 
         return test_cycle
 
 
 def select(composer):
-    from basicGraph import Graph
-    from fixtures import TestGraph
+    from basicGraph import Graph, Edge
+    from basicGraph.test_graph import TestGraph
 
+    composer.compose(SimpleEdgeRefinement(), Edge)
     composer.compose(SimpleGraphRefinement(), Graph)
     composer.compose(TestRefinement(), TestGraph)

@@ -1,46 +1,35 @@
-from featurepy import Composer
+from featurepy import Composer, Aspect, Proceed, Return, weave
 from basicGraph import Node, Edge
-# from fixtures import new_graph
 
 
-class EdgeRefinement:
-    def refine_go_from(self, original):
-        def go_from(slf, a):
-            return slf.b.val if Node(a) == slf.a else None
+class GraphRefinement:
+    def refine_add(self, original):
+        def add(slf, a, b, *args, **kwargs):
+            original(slf, a, b, *args, **kwargs)
+            slf.get_node(b).neighbours.pop()
 
-        return go_from
-
-
-class TestEdgeRefinement:
-    def refine_test_go_from(self, original):
-        def test_go_from(slf):
-            edge = Edge("a", "b")
-
-            assert edge.go_from("a") == "b"
-            assert edge.go_from("b") is None
-            assert edge.go_from("c") is None
-
-        return test_go_from
+        return add
 
 
 class TestGraphRefinement:
-    def refine_test_nodes_from(self, original):
-        def test_nodes_from(slf, new_graph):
-            new_graph.add("a", "b")
-            new_graph.add("c", "a")
-            new_graph.add("a", "a")
+    def refine_test_node_neighbours(self, original):
+        def test_node_neighbours(self, graph):
+            graph.add("a", "b")
+            graph.add("c", "a")
+            graph.add("a", "a")
 
-            assert set(new_graph.nodes_from("c")) == set(["a"])
-            assert set(new_graph.nodes_from("b")) == set([])
-            assert set(new_graph.nodes_from("a")) == set(["a", "b"])
+            assert set(graph.get_node("c").neighbour_nodes()
+                       ) == set([Node("a")])
+            assert set(graph.get_node("b").neighbour_nodes()) == set([])
+            assert set(graph.get_node("a").neighbour_nodes()) == set(
+                [Node("a"), Node("b")])
 
-        return test_nodes_from
+        return test_node_neighbours
 
 
 def select(composer: Composer):
-    from basicGraph import Edge
-    from fixtures import TestEdge, TestGraph
+    from basicGraph import Graph
+    from basicGraph.test_graph import TestGraph
 
-    composer.compose(EdgeRefinement(), Edge)
-    composer.compose(TestEdgeRefinement(), TestEdge)
+    composer.compose(GraphRefinement(), Graph)
     composer.compose(TestGraphRefinement(), TestGraph)

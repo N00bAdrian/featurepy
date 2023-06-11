@@ -7,6 +7,8 @@ import inspect
 
 
 def feature_method(func):
+    wraps(func)
+
     def wrapper(self, *args, **kwargs):
 
         cutpoint_aspects = self.aspects[func.__name__] if func.__name__ in self.aspects else {
@@ -14,6 +16,8 @@ def feature_method(func):
         result_func = func
         for cutpoint, aspects in cutpoint_aspects.items():
             base_func = result_func
+            if isinstance(cutpoint, str):
+                cutpoint = eval(cutpoint)
 
             def weaved_func(self, *args, **kwargs):
                 with weave(cutpoint, aspects):
@@ -27,6 +31,8 @@ def feature_method(func):
 
 
 def feature(cls):
+    wraps(cls)
+
     class Wrapper(cls):
         aspects = {}
 
