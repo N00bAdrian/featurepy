@@ -1,0 +1,5 @@
+name: messageBoard
+branch: or
+children:
+- name: addAuthor
+- name: addDelete
