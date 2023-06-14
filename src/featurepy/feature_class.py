@@ -16,8 +16,8 @@ def feature_method(func):
         result_func = func
         for cutpoint, aspects in cutpoint_aspects.items():
             base_func = result_func
-            if isinstance(cutpoint, str):
-                cutpoint = eval(cutpoint)
+            # if isinstance(cutpoint, str):
+            #     cutpoint = eval(cutpoint)
 
             def weaved_func(self, *args, **kwargs):
                 with weave(cutpoint, aspects):
@@ -30,6 +30,7 @@ def feature_method(func):
     return wrapper
 
 
+# TODO: weave aspects on methods
 def feature(cls):
     wraps(cls)
 
@@ -37,7 +38,7 @@ def feature(cls):
         aspects = {}
 
         @classmethod
-        def register_aspect(clss, method, cutpoint, aspect):
+        def register_aspect(clss, method, cutpoint, aspect, **kwargs):  # Missing options
             if method not in clss.aspects:
                 clss.aspects[method] = {}
             if cutpoint not in clss.aspects[method]:

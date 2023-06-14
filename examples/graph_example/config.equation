@@ -1,6 +1,6 @@
 #cycleDetection
-search("DFS")
+#search("BFS")
 #directedGraph
-#weightedGraph
+weightedGraph
 #simpleGraph
 basicGraph

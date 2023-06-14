@@ -36,11 +36,18 @@ def get_features(fm):
     return features
 
 
-def parse_reqs(reqs, selections):  # Not complete
-    return reqs in selections
+def _is_operator(token: str) -> bool:
+    return token in ["or", "and", "not"]
 
 
-def validate_selections(fm, selections, remaining_selections):
+def parse_reqs(reqs, selections):
+    tokens = reqs.split()
+    expr = " ".join([f"{token} in selections" if not _is_operator(
+        token) else token for token in tokens])
+    return eval(expr)
+
+
+def validate_selections(fm, selections: list[str], remaining_selections: list[str]):
     if not is_optional(fm) and not is_abstract(fm) and fm['name'] not in selections:
         raise FeatureSelectionError(
             f"Mandatory feature not selected: {fm['name']}")
@@ -59,6 +66,9 @@ def validate_selections(fm, selections, remaining_selections):
                 f"Incorrect number of xor features selected for branch {fm['name']}")
 
         for child in fm['children']:
+            if child['name'] in selections and selections.index(child['name']) > selections.index(fm['name']):
+                raise FeatureSelectionError(
+                    f"Child feature {child['name']} is selected before parent {fm['name']}.")
             if is_branch(fm, 'or'):
                 child['optional'] = True
             remaining_selections = validate_selections(
@@ -69,20 +79,24 @@ def validate_selections(fm, selections, remaining_selections):
 
 @Aspect
 def model_constraints(composer, *features):
-    with open('feature_model.yml') as fp:
-        feature_model = safe_load(fp)
+    try:
+        with open('feature_model.yml') as fp:
+            feature_model = safe_load(fp)
 
-    all_features = get_features(feature_model)
-    selections = [feature.split("(")[0] for feature in features]
+        all_features = get_features(feature_model)
+        selections = [feature.split("(")[0] for feature in features]
 
-    if not set(selections).issubset(set(all_features)):
-        raise FeatureSelectionError("Undefined features selected.")
+        if not set(selections).issubset(set(all_features)):
+            raise FeatureSelectionError("Undefined features selected.")
 
-    unvalidated_selections = validate_selections(
-        feature_model, list(selections), list(selections))
+        unvalidated_selections = validate_selections(
+            feature_model, list(selections), list(selections))
 
-    if unvalidated_selections != []:
-        raise FeatureSelectionError(
-            f"Parent features not selected {unvalidated_selections}")
+        if unvalidated_selections != []:
+            raise FeatureSelectionError(
+                f"Parent features not selected or the feature is selected more than once: {unvalidated_selections}")
+    except FileNotFoundError:
+        print("Feature model tree not found, proceeding without constraint checks...")
+        pass
 
     yield Proceed(composer, *features)

@@ -3,7 +3,7 @@ from basicGraph import Node
 
 
 class SearchTypeError(Exception):
-    "Unrecognized search type, please check that the search type is either BFS (breadth first search) or DFS (depth first search)"
+    '''Raise when neither BFS or DFS is passed as an argument'''
 
 
 def _depth_first_search(start: Node, traversed_nodes: list[Node]) -> list[Node]:
@@ -31,14 +31,17 @@ class GraphRefinementTree:
         self.type = type
 
     def introduce_search_from(self):
-        def search_from(slf, start_val: any):
-            start_node = slf.get_node(start_val)
-            if self.type == "DFS":
+        if self.type == "DFS":
+            def search_from(slf, start_val: any):
+                start_node = slf.get_node(start_val)
                 return _depth_first_search(start_node, [])
-            elif self.type == "BFS":
+        elif self.type == "BFS":
+            def search_from(slf, start_val: any):
+                start_node = slf.get_node(start_val)
                 return _breadth_first_seach(start_node)
-            else:
-                raise SearchTypeError
+        else:
+            raise SearchTypeError(
+                "Unrecognized search type, please check that the search type is either BFS (breadth first search) or DFS (depth first search)")
 
         return search_from
 

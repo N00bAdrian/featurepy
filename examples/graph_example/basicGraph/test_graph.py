@@ -7,6 +7,19 @@ def graph() -> Graph:
     return Graph()
 
 
+class TestNode:
+    def test_node_init(self):
+        node1 = Node(1)
+        assert node1.val == 1
+        node2 = Node(1)
+        assert node2.val == 1
+        node3 = Node(2)
+        assert node3.val == 2
+
+        assert node1 == node2
+        assert node1 != node3
+
+
 class TestEdge:
     def test_edge_init(self):
         e = Edge(1, 2)

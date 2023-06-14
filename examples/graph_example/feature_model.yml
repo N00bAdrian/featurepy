@@ -9,10 +9,17 @@ children:
 - name: weightedGraph
   optional: True
 
+- name: search
+  optional: True
+
 - name: Algorithms
   optional: True
   branch: or
   children:
   - name: cycleDetection
     cross-tree-reqs: directedGraph
-  - name: search
+  - name: vertexNumbering
+  - name: shortestPath
+    cross-tree-reqs: directedGraph and weightedGraph
+  - name: minimumSpanningTree
+    cross-tree-reqs: not directedGraph and weightedGraph

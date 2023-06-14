@@ -1,4 +1,5 @@
 import pytest
+from featurepy import Aspect, Proceed, weave
 from basicGraph import Edge, Node
 
 
@@ -7,7 +8,15 @@ class RepeatedEdgeError(Exception):
     pass
 
 
-class SimpleEdgeRefinement:
+@Aspect
+def enforce_simple(slf, a, b, *args, **kwargs):
+    if Edge(a, b) in slf.edges:
+        raise RepeatedEdgeError("Edge already exists in simple graph")
+    else:
+        yield Proceed(slf, a, b, *args, **kwargs)
+
+
+class EdgeRefinement:
     def refine___eq__(self, original):
         def __eq__(cls, other):
             if isinstance(other, Edge):
@@ -17,17 +26,7 @@ class SimpleEdgeRefinement:
         return __eq__
 
 
-class SimpleGraphRefinement:
-    def refine_add(self, original):
-        def add(cls, *args, **kwargs):
-            if Edge(*args, **kwargs) in cls.edges:
-                raise RepeatedEdgeError
-            else:
-                original(cls, *args, **kwargs)
-        return add
-
-
-class TestRefinement:
+class TestGraphRefinement:
     def refine_test_cycle(self, original):
         def test_cycle(slf, graph):
             print("hi")
@@ -42,6 +41,7 @@ def select(composer):
     from basicGraph import Graph, Edge
     from basicGraph.test_graph import TestGraph
 
-    composer.compose(SimpleEdgeRefinement(), Edge)
-    composer.compose(SimpleGraphRefinement(), Graph)
-    composer.compose(TestRefinement(), TestGraph)
+    composer.compose(EdgeRefinement(), Edge)
+    # composer.compose(GraphRefinement(), Graph)
+    weave(Graph, enforce_simple, methods="add")
+    composer.compose(TestGraphRefinement(), TestGraph)
