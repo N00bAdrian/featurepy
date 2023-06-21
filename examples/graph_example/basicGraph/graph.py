@@ -26,6 +26,9 @@ class Node:
             return self.val == other.val
         return False
 
+    def __lt__(self, other):
+        return hash(self) < hash(other)
+
     def __hash__(self):
         return hash(self.val)
 
@@ -33,8 +36,15 @@ class Node:
 @feature
 class Edge:
     def __init__(self, a, b):
-        self.a = Node(a)
-        self.b = Node(b)
+        if isinstance(a, Node):
+            self.a = a
+        else:
+            self.a = Node(a)
+
+        if isinstance(b, Node):
+            self.b = b
+        else:
+            self.b = Node(b)
 
     def __str__(self):
         return f"{str(self.a)}-{str(self.b)}"
@@ -61,7 +71,6 @@ class Graph:
     def add(self, a, b):
         na = Node(a)
         nb = Node(b)
-        e = Edge(a, b)
 
         if na not in self.nodes:
             self.nodes.append(na)
@@ -73,6 +82,8 @@ class Graph:
         else:
             nb = self.get_node(b)
 
+        e = Edge(na, nb)
+
         self.edges.append(e)
         na.neighbours.append((nb, e))
         nb.neighbours.append((na, e))
@@ -82,3 +93,17 @@ class Graph:
 
     def __str__(self):
         return ",".join([str(edge) for edge in self.edges])
+
+    def __eq__(self, other):
+        if isinstance(other, Graph):
+            other_nodes = other.nodes
+            other_edges = other.edges
+
+            try:
+                for node in self.nodes:
+                    other_nodes.remove(node)
+                for edge in self.edges:
+                    other_edges.remove(edge)
+            except ValueError:
+                return False
+        return other_nodes == [] and other_edges == []

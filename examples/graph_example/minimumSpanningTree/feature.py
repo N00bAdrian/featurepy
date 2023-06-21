@@ -1,6 +1,7 @@
 from featurepy import Composer
-from cycleDetection import _has_cycle_path
+from cycleDetection.feature import has_cycle_path
 from copy import deepcopy
+from math import inf
 import heapq
 
 from basicGraph.graph import Graph, Edge, Node
@@ -21,7 +22,7 @@ def _kruskal(edges: list[Edge]):
 
         new_tree = deepcopy(mst)
         new_tree.add(a, b, weight=w)
-        if not _has_cycle_path(new_tree, [], e.a):
+        if not has_cycle_path(new_tree, [], e.a):
             mst = new_tree
 
     return mst
@@ -29,6 +30,25 @@ def _kruskal(edges: list[Edge]):
 
 def _prim(nodes):
     mst = Graph()
+    pqueue = [(0, None, nodes[0])] + [(inf, None, node) for node in nodes[1:]]
+    while pqueue != []:
+        _, e, n = heapq.heappop(pqueue)
+        if e:
+            a = e.a.val
+            b = e.b.val
+            w = e.weight
+            mst.add(a, b, weight=w)
+        else:
+            mst.nodes.append(n)
+
+        for node, edge in n.neighbours:
+            if node not in mst.nodes:
+                p, qe, qn = list(
+                    filter(lambda tup, node=node: tup[2] == node, pqueue))[0]
+                if edge.weight < p:
+                    pqueue.remove((p, qe, qn))
+                    heapq.heappush(pqueue, (edge.weight, edge, node))
+
     return mst
 
 

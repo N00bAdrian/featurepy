@@ -56,6 +56,9 @@ class TestGraph:
         assert len(graph.edges) == 1
         assert str(graph) == "a-b"
 
+        assert graph.get_node("a").neighbours == [
+            (graph.get_node("b"), Edge("a", "b"))]
+
     def test_cycle(self, graph):
         graph.add("a", "b")
         graph.add("b", "a")
@@ -75,3 +78,17 @@ class TestGraph:
         assert set(graph.get_node("b").neighbour_nodes()) == set([Node("a")])
         assert set(graph.get_node("a").neighbour_nodes()) == set(
             [Node("a"), Node("b"), Node("c")])
+
+    def test_graph_eq(self, graph):
+        g2 = Graph()
+
+        assert graph == g2
+
+        graph.add(1, 2)
+        assert graph != g2
+
+        g2.add(1, 2)
+        assert graph == g2
+
+        g2.add(2, 3)
+        assert graph != g2
