@@ -10,6 +10,39 @@ class WeightedEdgeRefinement:
 
         return __init__
 
+    def refine___eq__(self, original):
+        def __eq__(slf, other):
+            return original(slf, other) and slf.weight == other.weight
+        return __eq__
+
+    def refine___le__(self, original):
+        def __le__(self, other):
+            if not isinstance(other, Edge):
+                raise Exception("Edges must be compared to other Edges")
+            return self.weight <= other.weight
+        return __le__
+
+    def refine___lt__(self, original):
+        def __lt__(self, other):
+            if not isinstance(other, Edge):
+                raise Exception("Edges must be compared to other Edges")
+            return self.weight < other.weight
+        return __lt__
+
+    def refine___ge__(self, original):
+        def __ge__(self, other):
+            if not isinstance(other, Edge):
+                raise Exception("Edges must be compared to other Edges")
+            return self.weight >= other.weight
+        return __ge__
+
+    def refine___gt__(self, original):
+        def __gt__(self, other):
+            if not isinstance(other, Edge):
+                raise Exception("Edges must be compared to other Edges")
+            return self.weight > other.weight
+        return __gt__
+
 
 def add_weight_aspect(weight):
     @Aspect
@@ -34,8 +67,23 @@ class TestEdgeRefinement:
         def test_weights(slf):
             assert Edge("a", "b").weight == 1
             assert Edge("a", "b", weight=2).weight == 2
+            assert Edge(1, 2) != Edge(1, 2, weight=2)
 
         return test_weights
+
+    def introduce_test_edge_comparison(self):
+        def test_edge_comparison(slf):
+            e1 = Edge(1, 2)
+            e2 = Edge(3, 4, weight=2)
+
+            assert e1 <= e2
+            assert e1 < e2
+            assert e2 >= e1
+            assert e2 > e1
+
+            assert e1 != e2
+
+        return test_edge_comparison
 
 
 class TestGraphRefinement:

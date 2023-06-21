@@ -1,18 +1,20 @@
 from featurepy import Composer
 from basicGraph import Node
+from copy import deepcopy
+
+
+def has_cycle_path(graph, traversed_nodes: list[Node], dest_node: Node):
+
+    # return dest_node in traversed_nodes or any([has_cycle_path(graph, traversed_nodes + [dest_node], d) for d in dest_node.neighbour_nodes()])
+    for node, edge in dest_node.neighbours:
+        if matching_edge_l := filter(lambda other: edge.a == other.a and edge.b == other.b, graph.edges):
+            new_graph = deepcopy(graph)
 
 
 class GraphRefinement:
-    def introduce__has_cycle_path(self):
-        def _has_cycle_path(slf, traversed_nodes: list[Node], dest_node: Node):
-
-            return dest_node in traversed_nodes or any([slf._has_cycle_path(traversed_nodes + [dest_node], d) for d in dest_node.neighbour_nodes()])
-
-        return _has_cycle_path
-
     def introduce_has_cycle(self):
         def has_cycle(slf):
-            return any([slf._has_cycle_path([], node) for node in slf.nodes])
+            return any([has_cycle_path(slf, [], node) for node in slf.nodes])
 
         return has_cycle
 

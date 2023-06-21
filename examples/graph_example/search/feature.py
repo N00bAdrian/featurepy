@@ -27,7 +27,7 @@ def _breadth_first_seach(start: Node) -> list[Node]:
 
 
 class GraphRefinementTree:
-    def __init__(self, type):
+    def __init__(self, type: str):
         self.type = type
 
     def introduce_search_from(self):
@@ -70,7 +70,7 @@ class TestGraphRefinementTree:
         return test_search_from
 
 
-def select(composer: Composer, type):
+def select(composer: Composer, type: str):
     from basicGraph import Graph
     from basicGraph.test_graph import TestGraph
     composer.compose(GraphRefinementTree(type), Graph)

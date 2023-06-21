@@ -42,6 +42,11 @@ class Edge:
     def __repr__(self):
         return f"{str(self.a)}-{str(self.b)}"
 
+    def __eq__(cls, other):
+        if isinstance(other, Edge):
+            return (cls.a == other.a and cls.b == other.b) or (cls.a == other.b and cls.b == other.a)
+        return False
+
 
 @feature
 class Graph:

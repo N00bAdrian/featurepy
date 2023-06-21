@@ -17,8 +17,6 @@ children:
   branch: or
   children:
   - name: cycleDetection
-    cross-tree-reqs: directedGraph
-  - name: vertexNumbering
   - name: shortestPath
     cross-tree-reqs: directedGraph and weightedGraph
   - name: minimumSpanningTree

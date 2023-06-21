@@ -26,6 +26,16 @@ class TestEdge:
         assert e.a == Node(1)
         assert e.b == Node(2)
 
+    def test_edge_eq(self):
+        e1 = Edge(1, 2)
+        e2 = Edge(2, 1)
+        e3 = Edge(2, 3)
+        e4 = Edge(1, 2)
+
+        assert e1 == e4
+        assert e1 == e2
+        assert e1 != e3
+
 
 class TestGraph:
     def test_init_graph(self, graph):
