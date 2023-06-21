@@ -45,46 +45,17 @@ def add_author_template(filename, **kwargs):
             yield Proceed(path.basename(tfp.name), **kwargs)
 
 
-@Aspect
-def add_author_db(self, msg):
-    if msg.author == "":
-        msg.author = "Anonymous"
-    yield Proceed(self, msg)
+def empty_to_anonymous(form, field):
+    field.data = "Anonymous" if field.data == "" else field.data
 
 
 class AuthorFormField:
-    introduce_author = StringField("Author")
+    introduce_author = StringField("Author", validators=[empty_to_anonymous])
 
 
 class AuthorModelField:
     introduce_author = db.Column(
         db.String, nullable=False, default="Anonymous")
-
-
-# class AuthorTemplate:
-    # def refine_render(self, original):
-    #     @staticmethod
-    #     def render(filename, **kwargs):
-    #         with open(f'messageBoard/templates/{filename}') as fp:
-    #             soup = BeautifulSoup(fp, 'html.parser')
-    #             soup = _add_author_form(soup)
-    #             soup = _add_author_card(soup)
-
-    #             with NamedTemporaryFile(suffix=".html", dir="messageBoard/templates") as tfp:
-    #                 tfp.write(str.encode(soup.prettify()))
-    #                 tfp.seek(0)
-    #                 return original(path.basename(tfp.name), **kwargs)
-
-    #     return render
-
-    # def refine_add_to_db(self, original):
-    #     @staticmethod
-    #     def add_to_db(data):
-    #         if data["author"] == "":
-    #             data["author"] = "Anonyous"
-    #         original(data)
-
-    #     return add_to_db
 
 
 def select(composer):
@@ -93,7 +64,5 @@ def select(composer):
 
     composer.compose(AuthorFormField(), MessageForm)
     composer.compose(AuthorModelField(), Message)
-    # composer.compose(AuthorTemplate(), HomeView)
     HomeView.register_aspect(
         "get", "flask.render_template", add_author_template)
-    HomeView.register_aspect("post", db.session.add, add_author_db)

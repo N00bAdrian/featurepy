@@ -46,8 +46,8 @@ class Edge:
 @feature
 class Graph:
     def __init__(self):
-        self.edges = []
-        self.nodes = []
+        self.edges: list[Edge] = []
+        self.nodes: list[Node] = []
 
     def get_node(self, val) -> Optional(Node):
         node_list = list(filter(lambda x: x == Node(val), self.nodes))
@@ -61,12 +61,12 @@ class Graph:
         if na not in self.nodes:
             self.nodes.append(na)
         else:
-            na = list(filter(lambda x: x == na, self.nodes))[0]
+            na = self.get_node(a)
 
         if nb not in self.nodes:
             self.nodes.append(nb)
         else:
-            nb = list(filter(lambda x: x == nb, self.nodes))[0]
+            nb = self.get_node(b)
 
         self.edges.append(e)
         na.neighbours.append((nb, e))

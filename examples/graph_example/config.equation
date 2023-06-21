@@ -1,6 +1,7 @@
+shortestPath
 #cycleDetection
 #search("BFS")
-#directedGraph
+directedGraph
 weightedGraph
 #simpleGraph
 basicGraph

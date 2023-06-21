@@ -1,6 +1,8 @@
 from aspectlib import Aspect, Proceed
 from yaml import safe_load
 
+# TODO: Re-order features
+
 
 class FeatureSelectionError(Exception):
     def __init__(self, message):
@@ -42,7 +44,7 @@ def _is_operator(token: str) -> bool:
 
 def parse_reqs(reqs, selections):
     tokens = reqs.split()
-    expr = " ".join([f"{token} in selections" if not _is_operator(
+    expr = " ".join([f"'{token}' in selections" if not _is_operator(
         token) else token for token in tokens])
     return eval(expr)
 
@@ -66,7 +68,7 @@ def validate_selections(fm, selections: list[str], remaining_selections: list[st
                 f"Incorrect number of xor features selected for branch {fm['name']}")
 
         for child in fm['children']:
-            if child['name'] in selections and selections.index(child['name']) > selections.index(fm['name']):
+            if not is_abstract(fm) and (child['name'] in selections and selections.index(child['name']) > selections.index(fm['name'])):
                 raise FeatureSelectionError(
                     f"Child feature {child['name']} is selected before parent {fm['name']}.")
             if is_branch(fm, 'or'):

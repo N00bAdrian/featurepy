@@ -20,6 +20,15 @@ def add_weight_aspect(weight):
     return add_weight
 
 
+class GraphRefinement:
+    def refine_add(self, original):
+        def add(slf, a, b, *args, weight=1, **kwargs):
+            with weave(Edge, add_weight_aspect(weight), methods="__init__"):
+                return original(slf, a, b, *args, **kwargs)
+
+        return add
+
+
 class TestEdgeRefinement:
     def introduce_test_weights(self):
         def test_weights(slf):
@@ -46,6 +55,6 @@ def select(composer: Composer):
     from basicGraph.test_graph import TestEdge, TestGraph
 
     composer.compose(WeightedEdgeRefinement(), Edge)
-    Graph.register_aspect('add', Edge, add_weight_aspect)
+    composer.compose(GraphRefinement(), Graph)
     composer.compose(TestEdgeRefinement(), TestEdge)
     composer.compose(TestGraphRefinement(), TestGraph)
