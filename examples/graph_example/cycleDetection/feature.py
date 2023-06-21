@@ -5,10 +5,17 @@ from copy import deepcopy
 
 def has_cycle_path(graph, traversed_nodes: list[Node], dest_node: Node):
 
-    # return dest_node in traversed_nodes or any([has_cycle_path(graph, traversed_nodes + [dest_node], d) for d in dest_node.neighbour_nodes()])
+    if dest_node in traversed_nodes:
+        return True
+
     for node, edge in dest_node.neighbours:
-        if matching_edge_l := filter(lambda other: edge.a == other.a and edge.b == other.b, graph.edges):
+        if edge in graph.edges:
             new_graph = deepcopy(graph)
+            new_graph.edges.remove(edge)
+            if has_cycle_path(new_graph, [dest_node] + traversed_nodes, node):
+                return True
+
+    return False
 
 
 class GraphRefinement:
@@ -28,9 +35,6 @@ class TestGraphRefinement:
             assert not graph.has_cycle()
 
             graph.add("b", "c")
-            assert not graph.has_cycle()
-
-            graph.add("a", "c")
             assert not graph.has_cycle()
 
             graph.add("x", "y")

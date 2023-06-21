@@ -1,8 +1,8 @@
-#minimumSpanningTree("kruskal")
+minimumSpanningTree("kruskal")
 #shortestPath
 #cycleDetection
 #search("BFS")
 #directedGraph
-weightedGraph
+#weightedGraph
 #simpleGraph
 basicGraph

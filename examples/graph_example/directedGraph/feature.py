@@ -2,6 +2,13 @@ from featurepy import Composer, Aspect, Proceed, Return, weave
 from basicGraph import Node, Edge
 
 
+class EdgeRefinement:
+    def refine___eq__(self, original):
+        def __eq__(slf, other):
+            return original(slf, other) and slf.a == other.a and slf.b == other.b
+        return __eq__
+
+
 class GraphRefinement:
     def refine_add(self, original):
         def add(slf, a, b, *args, **kwargs):
@@ -9,6 +16,20 @@ class GraphRefinement:
             slf.get_node(b).neighbours.pop()
 
         return add
+
+
+class TestEdgeRefinement:
+    def refine_test_edge_eq(self, original):
+        def test_edge_eq(slf):
+            e1 = Edge(1, 2)
+            e2 = Edge(2, 1)
+            e3 = Edge(2, 3)
+            e4 = Edge(1, 2)
+
+            assert e1 == e4
+            assert e1 != e2
+            assert e1 != e3
+        return test_edge_eq
 
 
 class TestGraphRefinement:
