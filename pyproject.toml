@@ -1,16 +1,16 @@
 [tool.poetry]
 name = "featurepy"
-version = "0.2.2.1"
+version = "0.2.4"
 description = "Framework for building software product lines using feature-oriented programming (FOP) and aspect-oriented programming (AOP) in Python."
 authors = ["Adrian Wong <adrianwong227@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-featuremonkey3 = "^0.1.1"
 aspectlib = "^2.0.0"
 flask = "^2.3.2"
 pyyaml = "^6.0"
+featuremonkey3 = "^0.1.2"
 
 [tool.poetry.scripts]
 newfeature = "featurepy.scripts.features:newfeature"

@@ -1,8 +1,9 @@
-minimumSpanningTree("prim")
+#invalidFeature
+#minimumSpanningTree("prim")
 #shortestPath
-cycleDetection
-#search("BFS")
+#cycleDetection
+search("DFS")
 #directedGraph
-weightedGraph
+#weightedGraph
 #simpleGraph
 basicGraph

@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from tempfile import NamedTemporaryFile
 from os import path
 from flask import request
-from featurepy import Aspect, Proceed
+from featurepy import Aspect, Proceed, weave
 
 from messageBoard.db import db
 from messageBoard.routes.home import MessageForm
@@ -58,11 +58,20 @@ class AuthorModelField:
         db.String, nullable=False, default="Anonymous")
 
 
+class AuthorViewField:
+    def refine_get(self, original):
+        def get(slf):
+            with weave("flask.render_template", add_author_template):
+                return original(slf)
+        return get
+
+
 def select(composer):
     from messageBoard.models.message import Message
     from messageBoard.routes.home import MessageForm, HomeView
 
     composer.compose(AuthorFormField(), MessageForm)
     composer.compose(AuthorModelField(), Message)
+    # composer.compose(AuthorViewField(), HomeView)
     HomeView.register_aspect(
         "get", "flask.render_template", add_author_template)

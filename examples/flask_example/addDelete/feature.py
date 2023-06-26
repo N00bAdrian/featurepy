@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from tempfile import NamedTemporaryFile
 from os import path
-from featurepy import Aspect, Proceed
+from featurepy import Aspect, Proceed, weave
 
 from .routes import delete
 
@@ -30,21 +30,12 @@ def add_delete_template(filename, **kwargs):
             yield Proceed(path.basename(tfp.name), **kwargs)
 
 
-# class DeleteTemplate:
-
-#     def refine_render(self, original):
-#         @staticmethod
-#         def render(filename, **kwargs):
-#             with open(f"messageBoard/templates/{filename}") as fp:
-#                 soup = BeautifulSoup(fp, 'html.parser')
-#                 soup = _add_delete_button(soup)
-
-#                 with NamedTemporaryFile(suffix=".html", dir="messageBoard/templates") as tfp:
-#                     tfp.write(str.encode(soup.prettify()))
-#                     tfp.seek(0)
-#                     return original(path.basename(tfp.name), **kwargs)
-
-#         return render
+class DeleteTemplate:
+    def refine_get(self, original):
+        def get(slf):
+            with weave("flask.render_template", add_delete_template):
+                return original(slf)
+        return get
 
 
 class DeleteRoute:
@@ -62,6 +53,6 @@ def select(composer):
     import messageBoard
 
     # composer.compose(DeleteTemplate(), HomeView)
-    HomeView.register_aspect(
-        "get", "flask.render_template", add_delete_template)
+    # HomeView.register_aspect(
+    #     "get", "flask.render_template", add_delete_template)
     composer.compose(DeleteRoute(), messageBoard)
